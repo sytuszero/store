@@ -416,8 +416,15 @@ def initialize():
     else:
         # Start polling if no webhook
         logger.info("Starting bot with polling")
+        import asyncio
         from threading import Thread
-        Thread(target=application.run_polling).start()
+
+        def run_bot():
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            loop.run_until_complete(application.run_polling())
+
+        Thread(target=run_bot).start()
 
 # Initialize on startup
 if __name__ == '__main__':
